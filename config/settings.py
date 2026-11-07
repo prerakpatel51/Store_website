@@ -3,6 +3,7 @@ from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
@@ -12,6 +13,8 @@ DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1],testserver").split(",") if host.strip()]
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if origin.strip()]
 IS_RAILWAY = bool(os.getenv("RAILWAY_ENVIRONMENT"))
+if IS_RAILWAY and SECRET_KEY == "unsafe-local-dev-key":
+    raise ImproperlyConfigured("Set DJANGO_SECRET_KEY before deploying to Railway.")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -67,7 +70,7 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = Path(os.getenv("MEDIA_ROOT", str(BASE_DIR / "media")))
 STORAGES = {"staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"}}
 AGE_VERIFICATION_LOG_PATH = os.getenv("AGE_VERIFICATION_LOG_PATH", str(BASE_DIR / "data" / "age_verification.jsonl"))
 

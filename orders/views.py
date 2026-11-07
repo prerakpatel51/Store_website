@@ -1,7 +1,11 @@
 from datetime import date
+import mimetypes
+from pathlib import Path
 
 from django.contrib import admin, messages
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -11,6 +15,18 @@ from django.views.generic import TemplateView
 
 from .age_gate import append_age_log, clear_age_logs, read_age_logs, safe_public_path
 from .models import HomePageContent, Store
+
+
+def public_homepage_image(request, filename):
+    """Serve admin-uploaded storefront images from persistent media storage."""
+    media_root = Path(settings.MEDIA_ROOT).resolve()
+    image_path = (media_root / "homepage" / filename).resolve()
+    if not image_path.is_relative_to(media_root / "homepage") or not image_path.is_file():
+        raise Http404
+    content_type, _ = mimetypes.guess_type(image_path.name)
+    if content_type not in {"image/jpeg", "image/png", "image/webp", "image/gif"}:
+        raise Http404
+    return FileResponse(image_path.open("rb"), content_type=content_type)
 
 
 @method_decorator(never_cache, name="dispatch")

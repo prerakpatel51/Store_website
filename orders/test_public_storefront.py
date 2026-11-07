@@ -21,12 +21,14 @@ class PublicStorefrontTests(TestCase):
         settings_context.enable()
         self.addCleanup(settings_context.disable)
         self.log_file = Path(directory.name) / "ages.jsonl"
-        self.store = Store.objects.create(
-            number="1850", name="SPIRITS2U 1850",
-            homepage_name="Merritt Island", monday_hours="8 AM – 10 PM",
-            homepage_phone="(321) 452-4808",
-            homepage_delivery_url="https://www.doordash.com/store/example/",
-            latitude="28.389651", longitude="-80.701813",
+        self.store, _ = Store.objects.update_or_create(
+            number="1850",
+            defaults={
+                "name": "SPIRITS2U 1850", "homepage_name": "Merritt Island",
+                "monday_hours": "8 AM – 10 PM", "homepage_phone": "(321) 452-4808",
+                "homepage_delivery_url": "https://www.doordash.com/store/example/",
+                "latitude": "28.389651", "longitude": "-80.701813",
+            },
         )
 
     def test_store_page_shows_hours_and_delivery(self):
