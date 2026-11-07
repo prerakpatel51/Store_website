@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<div id="content-main">
+  <p>Responses submitted on the public age check. The IP address is the address received by this server.</p>
+  <form method="post" onsubmit="return confirm('Clear the entire age verification log file?');">
+    {% csrf_token %}
+    <button type="submit" class="button" style="margin-bottom:18px">Clear all logs</button>
+  </form>
+  <div class="module">
+    <table style="width:100%">
+      <thead><tr><th>Time (UTC)</th><th>IP address</th><th>Birthdate</th><th>Age</th><th>Answered 21+</th><th>Access</th><th>Page</th></tr></thead>
+      <tbody>{% for record in records %}<tr><td>{{ record.timestamp }}</td><td>{{ record.ip }}</td><td>{{ record.birthdate|default_if_none:"—" }}</td><td>{{ record.age|default_if_none:"—" }}</td><td>{{ record.answer_21_or_older }}</td><td>{% if record.allowed %}Allowed{% else %}Denied{% endif %}</td><td>{{ record.page }}</td></tr>{% empty %}<tr><td colspan="7">No age checks recorded.</td></tr>{% endfor %}</tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<div id="content-main">
+  <h2>Storefront management</h2>
+  <p><a href="{% url 'admin:orders_store_changelist' %}">Manage stores</a> · <a href="{% url 'admin:orders_store_add' %}">Add a store</a></p>
+  <p><a href="{% url 'admin:orders_homepagecontent_changelist' %}">Edit site content</a></p>
+  <p><a href="{% url 'age-log-admin' %}">View or clear age verification logs</a></p>
+</div>
+{% endblock %}

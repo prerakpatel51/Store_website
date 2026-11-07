@@ -1,0 +1,9 @@
+{% load static %}
+<footer class="public-footer">
+  <div class="public-footer-main">
+    <div class="public-footer-brand"><a href="{% url 'home' %}"><img src="{% if homepage.logo_image %}{{ homepage.logo_image.url }}{% else %}{% static 'orders/homepage/spirits2u-logo.svg' %}{% endif %}" alt="Spirits2U"></a><p>{{ homepage.footer_tagline }}</p></div>
+    <div><h2>{{ homepage.footer_explore_heading }}</h2><a href="{% url 'home' %}#locations">{{ homepage.footer_locations_text }}</a><a href="{% url 'home' %}#map">{{ homepage.footer_map_text }}</a></div>
+    <div><h2>{{ homepage.footer_visit_heading }}</h2><p>{{ homepage.footer_visit_text }}</p><p>{{ homepage.footer_delivery_text }}</p></div>
+  </div>
+  <div class="public-footer-bottom"><span>© {% now "Y" %} Spirits2U. All rights reserved.</span><span>{{ homepage.footer_legal_text }}</span>{% if user.is_authenticated %}<form method="post" action="{% url 'admin:logout' %}">{% csrf_token %}<button type="submit">Sign out</button></form>{% endif %}</div>
+</footer>

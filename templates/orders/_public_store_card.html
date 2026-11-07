@@ -1,0 +1,13 @@
+{% load static %}
+<article class="landing-location-card" data-search="{{ store.public_name }} {{ store.homepage_city }} {{ store.homepage_address }} {{ store.number }}" data-latitude="{{ store.latitude|default_if_none:'' }}" data-longitude="{{ store.longitude|default_if_none:'' }}">
+  <a class="landing-location-photo" href="{% url 'public-store-detail' store.public_slug %}"><img src="{% if store.homepage_image %}{{ store.homepage_image.url }}{% else %}{% static 'orders/homepage/storefront.webp' %}{% endif %}" alt="{% if store.homepage_image %}{{ store.public_name }} location{% else %}Illustration of a store{% endif %}" loading="lazy">{% if not store.homepage_image %}<span class="photo-placeholder">Photo coming soon</span>{% endif %}</a>
+  <div class="landing-location-info">
+    <p class="landing-store-meta">STORE {{ store.number }}{% if store.homepage_city %} · {{ store.homepage_city }}{% endif %}</p>
+    <h3><a href="{% url 'public-store-detail' store.public_slug %}">{{ store.public_name }}</a></h3>
+    {% if store.homepage_address %}<p class="landing-address">{{ store.homepage_address }}</p>{% elif store.homepage_city %}<p class="landing-address">{{ store.homepage_city }}</p>{% endif %}
+    {% if store.homepage_phone %}<a class="landing-phone" href="tel:{{ store.phone_href }}"><i data-lucide="phone"></i> {{ store.homepage_phone }}</a>{% endif %}
+    <p class="landing-hours{% if not store.today_hours %} is-unverified{% endif %}"><i data-lucide="clock-3"></i> {% if store.today_hours %}Today: {{ store.today_hours }}{% else %}Hours being updated{% endif %}</p>
+    <p class="landing-distance" hidden></p>
+    <div class="landing-card-actions"><a class="landing-card-outline" href="{% url 'public-store-detail' store.public_slug %}">Hours & details <i data-lucide="arrow-right"></i></a>{% if store.homepage_delivery_url %}<a class="landing-card-orange" href="{{ store.homepage_delivery_url }}" target="_blank" rel="noopener noreferrer">Order on DoorDash <i data-lucide="arrow-up-right"></i></a>{% endif %}</div>
+  </div>
+</article>
