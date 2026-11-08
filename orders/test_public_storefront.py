@@ -42,6 +42,8 @@ class PublicStorefrontTests(TestCase):
         self.assertContains(response, "(321) 452-4808")
         self.assertContains(response, "https://www.doordash.com/store/example/")
         self.assertContains(response, "Call (321) 452-4808")
+        self.assertNotContains(response, 'class="store-detail-photo"')
+        self.assertNotContains(response, "Photo coming soon")
         self.assertNotContains(response, 'class="store-visit-panel"')
         self.assertEqual(self.client.get(store_url).status_code, 302)
 
