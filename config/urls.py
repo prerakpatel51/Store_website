@@ -6,6 +6,8 @@ from django.urls import path
 from orders import views
 
 urlpatterns = [
+    path("robots.txt", views.robots_txt, name="robots"),
+    path("sitemap.xml", views.sitemap_xml, name="sitemap"),
     path("admin/age-logs/", admin.site.admin_view(views.age_logs_admin_view), name="age-log-admin"),
     path("admin/", admin.site.urls),
     path("age-check/", views.AgeCheckView.as_view(), name="age-check"),

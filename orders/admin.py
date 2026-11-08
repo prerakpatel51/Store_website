@@ -14,6 +14,7 @@ class StoreAdmin(admin.ModelAdmin):
     list_editable = ("homepage_visible",)
     fieldsets = (
         ("Store", {"fields": ("number", "name", "homepage_name", "active", "homepage_visible", "homepage_order", "public_slug")}),
+        ("Search appearance", {"fields": ("seo_title", "seo_description"), "description": "Optional search result text for this store. Leave blank to use its name and address automatically."}),
         ("Contact and ordering", {"fields": ("homepage_city", "homepage_address", "homepage_phone", "homepage_delivery_url", "homepage_directions_url")}),
         ("Store photo and map", {"fields": ("homepage_image", "latitude", "longitude"), "description": "Add latitude and longitude to show this store on the map."}),
         ("Store hours", {"fields": ("monday_hours", "tuesday_hours", "wednesday_hours", "thursday_hours", "friday_hours", "saturday_hours", "sunday_hours", "homepage_hours"), "description": "Enter daily hours as visitors should see them, such as 9 AM – 10 PM."}),
@@ -22,6 +23,7 @@ class StoreAdmin(admin.ModelAdmin):
 class HomePageContentAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Branding", {"fields": ("logo_image",)}),
+        ("Search appearance", {"fields": ("seo_title", "seo_description"), "description": "Optional home page search result text. Leave blank to use the built-in wording."}),
         ("Home page hero", {"fields": ("eyebrow", "headline", "headline_accent", "intro", "hero_image", "hero_point_one", "hero_point_two", "hero_point_three", "search_placeholder", "search_button_text", "nearby_button_text")}),
         ("Home page locations and map", {"fields": ("locations_eyebrow", "locations_heading", "locations_intro", "map_eyebrow", "map_heading", "map_intro")}),
         ("Store pages", {"fields": ("store_hero_image", "store_eyebrow", "store_hours_heading", "store_back_text", "store_call_text", "store_directions_text", "store_delivery_text")}),

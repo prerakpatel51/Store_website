@@ -5,6 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Spirits2U{% endblock %}</title>
+  {% if seo_description %}<meta name="description" content="{{ seo_description }}">{% endif %}
+  {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}"><meta property="og:title" content="{{ seo_title }}"><meta property="og:description" content="{{ seo_description }}"><meta property="og:url" content="{{ canonical_url }}"><meta property="og:type" content="website">{% endif %}
+  {% if store_schema_json %}<script type="application/ld+json">{{ store_schema_json|safe }}</script>{% endif %}
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,9 +15,12 @@
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
   {% block head %}{% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}{% if request.age_gate_required %} age-gate-pending{% endif %}">
+  <div id="site-content"{% if request.age_gate_required %} inert{% endif %}>
   {% block header %}{% endblock %}
   <main class="app-main">{% block content %}{% endblock %}</main>
+  </div>
+  {% if request.age_gate_required %}<div class="age-gate-overlay" role="dialog" aria-modal="true" aria-label="Age verification" data-nosnippet>{% include "orders/_age_gate_panel.html" %}</div>{% endif %}
   {% block scripts %}{% endblock %}
   <script>document.addEventListener('DOMContentLoaded', () => window.lucide?.createIcons());</script>
 </body>

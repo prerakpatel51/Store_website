@@ -31,3 +31,5 @@
 @media(min-width:1250px){.landing-location-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(min-width:1650px){.landing-location-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(min-width:2500px){.landing-location-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.age-gate-pending{overflow:hidden}.age-gate-overlay{position:fixed;inset:0;z-index:1000;overflow:auto;background:#071b2d}.age-gate-overlay .age-check-wrap{min-height:calc(100vh - 94px)}
+@media(max-width:600px){.age-gate-overlay .age-check-wrap{min-height:calc(100vh - 76px)}}

@@ -4,10 +4,7 @@ import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlencode
-
 from django.conf import settings
-from django.shortcuts import redirect
 
 
 PUBLIC_PAGE = re.compile(r"^/(?:stores/[a-z0-9-]+/)?$")
@@ -81,7 +78,8 @@ class PublicAgeGateMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        request.age_gate_required = False
         if request.method == "GET" and PUBLIC_PAGE.fullmatch(request.path):
-            if not request.session.get("age_verified_via_home") and request.session.pop("age_gate_allowed_path", None) != request.path:
-                return redirect(f"/age-check/?{urlencode({'next': request.path})}")
+            if not request.session.get("age_verified_via_home"):
+                request.age_gate_required = request.session.pop("age_gate_allowed_path", None) != request.path
         return self.get_response(request)

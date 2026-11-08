@@ -1,6 +1,7 @@
 import json
 import tempfile
 from pathlib import Path
+from xml.etree import ElementTree
 
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
@@ -34,7 +35,7 @@ class PublicStorefrontTests(TestCase):
     def test_store_page_shows_hours_and_delivery(self):
         store_url = reverse("public-store-detail", args=[self.store.public_slug])
         self.assertEqual(store_url, "/stores/merritt-island-1850/")
-        self.assertEqual(self.client.get(store_url).status_code, 302)
+        self.assertContains(self.client.get(store_url), 'class="age-gate-overlay"')
         self.client.post(reverse("age-check"), {"next": store_url, "birthdate": "1990-01-01", "answer": "yes"})
         response = self.client.get(store_url)
         self.assertContains(response, "Merritt Island")
@@ -52,10 +53,10 @@ class PublicStorefrontTests(TestCase):
         site_content.save(update_fields=["store_hero_image"])
         self.client.post(reverse("age-check"), {"next": store_url, "birthdate": "1990-01-01", "answer": "yes"})
         self.assertContains(self.client.get(store_url), "/media/homepage/store-hero/custom.jpg")
-        self.assertEqual(self.client.get(store_url).status_code, 302)
+        self.assertContains(self.client.get(store_url), 'class="age-gate-overlay"')
 
     def test_home_hides_staff_sign_in_and_exposes_nearby_store(self):
-        self.assertEqual(self.client.get(reverse("home")).status_code, 302)
+        self.assertContains(self.client.get(reverse("home")), 'class="age-gate-overlay"')
         self.client.post(reverse("age-check"), {"next": "/", "birthdate": "1990-01-01", "answer": "yes"}, REMOTE_ADDR="192.0.2.12")
         response = self.client.get(reverse("home"))
         self.assertContains(response, 'id="find-nearby"')
@@ -65,6 +66,7 @@ class PublicStorefrontTests(TestCase):
         self.assertNotContains(response, 'class="landing-location-photo"')
         self.assertNotContains(response, 'class="store-map-list"')
         self.assertContains(response, "Store map")
+        self.assertNotContains(response, 'class="age-gate-overlay"')
         self.assertNotContains(response, "Staff sign in")
         self.assertNotContains(response, "Neighborhood stores")
         self.assertNotContains(response, "Local, helpful people")
@@ -73,6 +75,37 @@ class PublicStorefrontTests(TestCase):
         self.assertEqual(len(self.log_file.read_text().splitlines()), 1)
         record = json.loads(self.log_file.read_text().splitlines()[0])
         self.assertEqual((record["birthdate"], record["age"], record["ip"], record["allowed"]), ("1990-01-01", timezone.localdate().year - 1990, "192.0.2.12", True))
+
+    def test_search_metadata_sitemap_and_robots(self):
+        store_url = reverse("public-store-detail", args=[self.store.public_slug])
+        home = self.client.get("/", secure=True)
+        self.assertEqual(home.status_code, 200)
+        self.assertContains(home, "Spirits2U | Beer, Wine &amp; Spirits Stores in Florida")
+        self.assertContains(home, '<link rel="canonical" href="https://testserver/">')
+        self.assertContains(home, '<meta name="description" content="Find a Spirits2U near you in Florida.')
+        self.assertContains(home, 'class="age-gate-overlay"')
+        store = self.client.get(store_url, secure=True)
+        self.assertEqual(store.status_code, 200)
+        self.assertContains(store, '<link rel="canonical" href="https://testserver/stores/merritt-island-1850/">')
+        self.assertContains(store, '<meta name="description" content="Find Spirits2U Merritt Island')
+        self.assertContains(store, 'class="age-gate-overlay"')
+        self.assertIn("Store", store.content.decode())
+        robots = self.client.get("/robots.txt", secure=True)
+        self.assertEqual(robots.status_code, 200)
+        self.assertIn("text/plain", robots["Content-Type"])
+        self.assertContains(robots, "Sitemap: https://testserver/sitemap.xml")
+        self.assertContains(robots, "Disallow: /admin/")
+        sitemap = self.client.get("/sitemap.xml", secure=True)
+        self.assertEqual(sitemap.status_code, 200)
+        namespace = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        urls = [node.text for node in ElementTree.fromstring(sitemap.content).findall("s:url/s:loc", namespace)]
+        self.assertIn("https://testserver/", urls)
+        self.assertIn("https://testserver/stores/merritt-island-1850/", urls)
+        self.assertEqual(len(urls), len(set(urls)))
+        self.assertContains(self.client.get("/age-check/"), '<meta name="robots" content="noindex, nofollow">')
+        with self.settings(PUBLIC_SITE_URL="https://spirits2u.com"):
+            self.assertContains(self.client.get("/robots.txt"), "Sitemap: https://spirits2u.com/sitemap.xml")
+            self.assertContains(self.client.get("/"), '<link rel="canonical" href="https://spirits2u.com/">')
 
     def test_underage_denied_and_admin_can_clear_log(self):
         response = self.client.post(reverse("age-check"), {"next": "/", "birthdate": "2010-01-01", "answer": "no"})

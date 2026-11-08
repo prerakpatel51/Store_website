@@ -12,6 +12,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-local-dev-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 ALLOWED_HOSTS = [host.strip() for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1],testserver").split(",") if host.strip()]
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if origin.strip()]
+PUBLIC_SITE_URL = os.getenv("PUBLIC_SITE_URL", "").rstrip("/")
 IS_RAILWAY = bool(os.getenv("RAILWAY_ENVIRONMENT"))
 if IS_RAILWAY and SECRET_KEY == "unsafe-local-dev-key":
     raise ImproperlyConfigured("Set DJANGO_SECRET_KEY before deploying to Railway.")

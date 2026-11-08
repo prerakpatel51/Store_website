@@ -1,11 +1,12 @@
 from datetime import date
 import mimetypes
 from pathlib import Path
+from xml.etree import ElementTree
 
 from django.contrib import admin, messages
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -15,6 +16,24 @@ from django.views.generic import TemplateView
 
 from .age_gate import append_age_log, clear_age_logs, read_age_logs, safe_public_path
 from .models import HomePageContent, Store
+from .seo import home_seo, public_url, store_seo
+
+
+def robots_txt(request):
+    sitemap_url = public_url(request, reverse("sitemap"))
+    return HttpResponse(f"User-agent: *\nDisallow: /admin/\nSitemap: {sitemap_url}\n", content_type="text/plain; charset=utf-8")
+
+
+def sitemap_xml(request):
+    namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
+    ElementTree.register_namespace("", namespace)
+    root = ElementTree.Element(f"{{{namespace}}}urlset")
+    paths = [reverse("home")]
+    paths.extend(reverse("public-store-detail", args=[slug]) for slug in Store.objects.filter(active=True, homepage_visible=True).order_by("number").values_list("public_slug", flat=True) if slug)
+    for path in paths:
+        entry = ElementTree.SubElement(root, f"{{{namespace}}}url")
+        ElementTree.SubElement(entry, f"{{{namespace}}}loc").text = public_url(request, path)
+    return HttpResponse(ElementTree.tostring(root, encoding="utf-8", xml_declaration=True), content_type="application/xml; charset=utf-8")
 
 
 def public_homepage_image(request, filename):
@@ -52,6 +71,9 @@ class HomeView(TemplateView):
             for store in context["public_stores"]
             if store.latitude is not None and store.longitude is not None
         ]
+        context.update(home_seo(self.request, context["homepage"]))
+        context["next_path"] = self.request.path
+        context["today"] = timezone.localdate().isoformat()
         return context
 
 
@@ -63,6 +85,9 @@ class PublicStoreDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["store"] = get_object_or_404(Store, public_slug=kwargs["public_slug"], active=True, homepage_visible=True)
         context["homepage"] = HomePageContent.objects.first() or HomePageContent()
+        context.update(store_seo(self.request, context["store"]))
+        context["next_path"] = self.request.path
+        context["today"] = timezone.localdate().isoformat()
         return context
 
 

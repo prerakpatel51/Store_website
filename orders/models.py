@@ -38,6 +38,8 @@ class Store(TimeStampedModel):
     homepage_delivery_url = models.URLField(blank=True)
     homepage_directions_url = models.URLField(blank=True)
     homepage_order = models.PositiveSmallIntegerField(default=100)
+    seo_title = models.CharField(max_length=160, blank=True, help_text="Optional title shown in search results.")
+    seo_description = models.CharField(max_length=320, blank=True, help_text="Optional description for this store's search result.")
 
     class Meta:
         ordering = ["number", "name"]
@@ -75,6 +77,8 @@ class Store(TimeStampedModel):
 
 
 class HomePageContent(TimeStampedModel):
+    seo_title = models.CharField(max_length=160, blank=True, help_text="Optional home page title for search results.")
+    seo_description = models.CharField(max_length=320, blank=True, help_text="Optional home page description for search results.")
     logo_image = models.ImageField(upload_to="homepage/branding/", blank=True, help_text="Optional replacement for the Spirits2U logo.")
     eyebrow = models.CharField(max_length=100, default="YOUR NEIGHBORHOOD SPIRITS STORE")
     headline = models.CharField(max_length=120, default="Great Selection.")
