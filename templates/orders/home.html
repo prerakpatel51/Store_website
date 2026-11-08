@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}{{ seo_title }}{% endblock %}
 {% block body_class %}landing-body{% endblock %}
-{% block head %}<link rel="stylesheet" href="{% static 'orders/homepage.css' %}?v=20261108k"><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.css">{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'orders/homepage.css' %}?v=20261108o"><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.css">{% endblock %}
 {% block header %}
 <header class="landing-header"><a class="landing-logo-link" href="{% url 'home' %}"><img class="landing-logo-image" src="{% if homepage.logo_image %}{{ homepage.logo_image.url }}{% else %}{% static 'orders/homepage/spirits2u-logo.svg' %}{% endif %}" alt="Spirits2U"></a>{% if user.is_staff %}<nav aria-label="Site management"><a href="{% url 'admin:index' %}">Admin</a></nav>{% endif %}</header>
 {% endblock %}
@@ -11,7 +11,7 @@
 <section class="landing-locations" id="locations" aria-labelledby="locations-title"><div class="landing-section-head"><div><p class="landing-kicker">{{ homepage.locations_eyebrow }}</p><h2 id="locations-title">{{ homepage.locations_heading }}</h2><p>{{ homepage.locations_intro }}</p></div><span class="landing-count">{{ public_store_count }} location{{ public_store_count|pluralize }}</span></div><p class="landing-no-results" id="location-no-results" hidden>No stores match that search. Try a different name or number.</p><div class="landing-location-grid" id="location-grid">
 {% for store in public_stores %}{% include "orders/_public_store_card.html" %}{% empty %}<p class="landing-empty">Store locations will appear here once they are available.</p>{% endfor %}
 </div>{% if public_store_count > 4 %}<button type="button" class="landing-view-all" id="view-all-locations">View all {{ public_store_count }} locations <i data-lucide="arrow-right"></i></button>{% endif %}</section>
-<section class="landing-map-section" id="map" aria-labelledby="map-title"><div class="landing-map-heading"><p class="landing-kicker">{{ homepage.map_eyebrow }}</p><h2 id="map-title">{{ homepage.map_heading }}</h2><p>{{ homepage.map_intro }}</p></div><div id="store-map" class="store-map" role="region" aria-label="Map of Spirits2U locations">Loading map…</div>{{ map_stores|json_script:"store-map-data" }}</section>
+<section class="landing-map-section" id="map" aria-labelledby="map-title"><div class="landing-map-heading"><p class="landing-kicker">{{ homepage.map_eyebrow }}</p><h2 id="map-title">{{ homepage.map_heading }}</h2><p>{{ homepage.map_intro }}</p><label class="store-map-picker-label" for="map-store-picker">Jump to a store</label><select class="store-map-picker" id="map-store-picker"><option value="">Choose a store</option></select></div><div id="store-map" class="store-map" role="region" aria-label="Map of Spirits2U locations">Loading map…</div>{{ map_stores|json_script:"store-map-data" }}</section>
 {% include "orders/_public_footer.html" %}
 {% endblock %}
-{% block scripts %}<script type="module" src="{% static 'orders/store_map.js' %}?v=20261108b"></script><script src="{% static 'orders/landing.js' %}?v=20261107h"></script>{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'orders/store_map.js' %}?v=20261108h"></script><script src="{% static 'orders/landing.js' %}?v=20261107h"></script>{% endblock %}
