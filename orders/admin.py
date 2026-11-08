@@ -24,7 +24,7 @@ class HomePageContentAdmin(admin.ModelAdmin):
         ("Branding", {"fields": ("logo_image",)}),
         ("Home page hero", {"fields": ("eyebrow", "headline", "headline_accent", "intro", "hero_image", "hero_point_one", "hero_point_two", "hero_point_three", "search_placeholder", "search_button_text", "nearby_button_text")}),
         ("Home page locations and map", {"fields": ("locations_eyebrow", "locations_heading", "locations_intro", "map_eyebrow", "map_heading", "map_intro")}),
-        ("Store pages", {"fields": ("store_eyebrow", "store_hours_heading", "store_back_text", "store_call_text", "store_directions_text", "store_delivery_text")}),
+        ("Store pages", {"fields": ("store_hero_image", "store_eyebrow", "store_hours_heading", "store_back_text", "store_call_text", "store_directions_text", "store_delivery_text")}),
         ("Footer", {"fields": ("footer_tagline", "footer_explore_heading", "footer_locations_text", "footer_map_text", "footer_visit_heading", "footer_visit_text", "footer_delivery_text", "footer_legal_text")}),
         ("Age verification page", {"fields": ("age_background_image", "age_eyebrow", "age_heading", "age_intro", "age_birthdate_label", "age_yes_text", "age_no_text", "age_note")}),
     )

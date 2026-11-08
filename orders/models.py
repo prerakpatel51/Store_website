@@ -81,6 +81,7 @@ class HomePageContent(TimeStampedModel):
     headline_accent = models.CharField(max_length=120, default="Greater Service.")
     intro = models.TextField(default="Discover beer, wine and spirits with a friendly local team ready to help.")
     hero_image = models.ImageField(upload_to="homepage/hero/", blank=True)
+    store_hero_image = models.ImageField(upload_to="homepage/store-hero/", blank=True, help_text="Optional image behind the store page heading; uses the default store hero when empty.")
     locations_heading = models.CharField(max_length=120, default="Find a Spirits2U Near You")
     locations_intro = models.CharField(max_length=255, default="Explore our neighborhood stores and find the one that is right for you.")
     hero_point_one = models.CharField(max_length=80, default="Helpful staff")

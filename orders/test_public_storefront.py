@@ -43,10 +43,15 @@ class PublicStorefrontTests(TestCase):
         self.assertContains(response, "https://www.doordash.com/store/example/")
         self.assertContains(response, "Call (321) 452-4808")
         self.assertContains(response, 'class="store-detail-hero-photo"')
-        self.assertContains(response, "/static/orders/homepage/hero.")
+        self.assertContains(response, "/static/orders/homepage/store-hero.")
         self.assertNotContains(response, 'class="store-detail-photo"')
         self.assertNotContains(response, "Photo coming soon")
         self.assertNotContains(response, 'class="store-visit-panel"')
+        site_content = HomePageContent.objects.first()
+        site_content.store_hero_image = "homepage/store-hero/custom.jpg"
+        site_content.save(update_fields=["store_hero_image"])
+        self.client.post(reverse("age-check"), {"next": store_url, "birthdate": "1990-01-01", "answer": "yes"})
+        self.assertContains(self.client.get(store_url), "/media/homepage/store-hero/custom.jpg")
         self.assertEqual(self.client.get(store_url).status_code, 302)
 
     def test_home_hides_staff_sign_in_and_exposes_nearby_store(self):
@@ -107,6 +112,8 @@ class PublicStorefrontTests(TestCase):
         store_admin = self.client.get(reverse("admin:orders_store_add"))
         self.assertEqual(store_admin.status_code, 200)
         self.assertContains(store_admin, 'href="/admin/age-logs/">ID verification logs</a>')
+        content_admin = self.client.get(reverse("admin:orders_homepagecontent_change", args=[HomePageContent.objects.first().pk]))
+        self.assertContains(content_admin, 'name="store_hero_image"')
 
     def test_site_content_changes_public_pages(self):
         content = HomePageContent.objects.first() or HomePageContent()
