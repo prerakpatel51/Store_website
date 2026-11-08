@@ -1,6 +1,4 @@
-{% load static %}
 <article class="landing-location-card" data-search="{{ store.public_name }} {{ store.homepage_city }} {{ store.homepage_address }} {{ store.number }}" data-latitude="{{ store.latitude|default_if_none:'' }}" data-longitude="{{ store.longitude|default_if_none:'' }}">
-  <a class="landing-location-photo" href="{% url 'public-store-detail' store.public_slug %}"><img src="{% if store.homepage_image %}{{ store.homepage_image.url }}{% else %}{% static 'orders/homepage/storefront.webp' %}{% endif %}" alt="{% if store.homepage_image %}{{ store.public_name }} location{% else %}Illustration of a store{% endif %}" loading="lazy">{% if not store.homepage_image %}<span class="photo-placeholder">Photo coming soon</span>{% endif %}</a>
   <div class="landing-location-info">
     <p class="landing-store-meta">STORE {{ store.number }}{% if store.homepage_city %} · {{ store.homepage_city }}{% endif %}</p>
     <h3><a href="{% url 'public-store-detail' store.public_slug %}">{{ store.public_name }}</a></h3>

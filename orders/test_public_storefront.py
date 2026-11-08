@@ -53,6 +53,7 @@ class PublicStorefrontTests(TestCase):
         self.assertContains(response, 'data-latitude="28.389651"')
         self.assertContains(response, 'id="store-map"')
         self.assertContains(response, 'id="store-map-data"')
+        self.assertNotContains(response, 'class="landing-location-photo"')
         self.assertNotContains(response, 'class="store-map-list"')
         self.assertContains(response, "Store map")
         self.assertNotContains(response, "Staff sign in")

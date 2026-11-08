@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Spirits2U | Neighborhood wine & spirits{% endblock %}
 {% block body_class %}landing-body{% endblock %}
-{% block head %}<link rel="stylesheet" href="{% static 'orders/homepage.css' %}?v=20261107p"><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.css">{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'orders/homepage.css' %}?v=20261108a"><link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.css">{% endblock %}
 {% block header %}
 <header class="landing-header"><a class="landing-logo-link" href="{% url 'home' %}"><img class="landing-logo-image" src="{% if homepage.logo_image %}{{ homepage.logo_image.url }}{% else %}{% static 'orders/homepage/spirits2u-logo.svg' %}{% endif %}" alt="Spirits2U"></a>{% if user.is_staff %}<nav aria-label="Site management"><a href="{% url 'admin:index' %}">Admin</a></nav>{% endif %}</header>
 {% endblock %}
