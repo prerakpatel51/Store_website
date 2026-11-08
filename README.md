@@ -17,7 +17,7 @@ Store coordinates are entered in Admin. Each store has its own numbered map labe
 
 Visitors enter their birthdate and answer whether they are 21 or older. A successful home-page check covers store pages during the same session. A direct store-page visit asks for verification. Each attempt is appended to `data/age_verification.jsonl`; superusers can view and clear the file from Admin.
 
-The repository includes the 11 public store locations as a starter fixture. The migration seeds them only when missing, so later admin edits are retained. Local databases, uploaded photos, verification logs, and secrets are excluded from Git. Add store photos and production settings through Admin and environment variables.
+The repository includes 10 public store locations in its starter fixture. The migration seeds them only when missing, so later admin edits are retained. Local databases, uploaded photos, verification logs, and secrets are excluded from Git. Add store photos and production settings through Admin and environment variables.
 
 ## Search and domain setup
 

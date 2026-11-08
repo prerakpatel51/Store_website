@@ -163,7 +163,7 @@
     "number": "6940",
     "name": "PAPPY'S BAR",
     "active": true,
-    "homepage_visible": true,
+    "homepage_visible": false,
     "homepage_name": "Pappy's Bar",
     "public_slug": "pappys-bar-6940",
     "homepage_city": "Fort Pierce",

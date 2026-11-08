@@ -76,6 +76,12 @@ class PublicStorefrontTests(TestCase):
         record = json.loads(self.log_file.read_text().splitlines()[0])
         self.assertEqual((record["birthdate"], record["age"], record["ip"], record["allowed"]), ("1990-01-01", timezone.localdate().year - 1990, "192.0.2.12", True))
 
+    def test_pappys_bar_is_not_a_public_location(self):
+        self.assertFalse(Store.objects.get(number="6940").homepage_visible)
+        self.assertNotContains(self.client.get(reverse("home")), "Pappy's Bar")
+        self.assertContains(self.client.get(reverse("home")), "/stores/pappys-liquors-tavern-6939/")
+        self.assertEqual(self.client.get("/stores/pappys-bar-6940/").status_code, 404)
+
     def test_search_metadata_sitemap_and_robots(self):
         store_url = reverse("public-store-detail", args=[self.store.public_slug])
         home = self.client.get("/", secure=True)
