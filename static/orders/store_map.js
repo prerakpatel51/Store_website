@@ -51,8 +51,8 @@ if (storeMapElement && storeMapData) {
       const marker = document.createElement('button');
       marker.type = 'button';
       marker.className = 'store-map-marker';
-      marker.textContent = store.number;
-      marker.setAttribute('aria-label', `Show store ${store.number}, ${store.name}, on the map`);
+      marker.textContent = store.name;
+      marker.setAttribute('aria-label', `Show ${store.name}, store ${store.number}, on the map`);
       anchor.append(connector, point, marker);
       new maplibregl.Marker({element: anchor, anchor: 'center'})
         .setLngLat(coordinates)
@@ -66,16 +66,22 @@ if (storeMapElement && storeMapData) {
       const placed = [];
       const width = storeMapElement.clientWidth;
       const height = storeMapElement.clientHeight;
-      const offsets = [
-        [0, -27], [0, 27], [-37, -27], [37, -27], [-37, 27], [37, 27],
-        [-70, 0], [70, 0], [-70, -34], [70, -34], [-70, 34], [70, 34],
-        [0, -62], [0, 62], [-105, -27], [105, -27],
-      ];
       const projected = markers.map(entry => ({...entry, point: map.project(entry.coordinates)}))
         .sort((a, b) => a.point.y - b.point.y || a.point.x - b.point.x);
       projected.forEach(entry => {
         const labelWidth = entry.marker.offsetWidth;
         const labelHeight = entry.marker.offsetHeight;
+        const side = labelWidth / 2 + 19;
+        const step = labelHeight + 10;
+        const offsets = [
+          [0, -labelHeight / 2 - 17], [side, 0], [-side, 0],
+          [0, labelHeight / 2 + 17],
+          [side, -step], [-side, -step], [side, step], [-side, step],
+          [side, -step * 2], [-side, -step * 2],
+          [side, step * 2], [-side, step * 2],
+          [0, -step * 2], [0, step * 2],
+          [side * 1.8, 0], [-side * 1.8, 0],
+        ];
         let choice = offsets[0];
         let lowestScore = Infinity;
         offsets.forEach(([dx, dy]) => {

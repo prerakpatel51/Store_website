@@ -97,7 +97,7 @@ class HomePageContent(TimeStampedModel):
     locations_eyebrow = models.CharField(max_length=80, default="OUR LOCATIONS")
     map_eyebrow = models.CharField(max_length=80, default="EXPLORE THE AREA")
     map_heading = models.CharField(max_length=120, default="Find us on the map")
-    map_intro = models.CharField(max_length=255, default="Tap a numbered marker to see the store name, hours and a link to its page.")
+    map_intro = models.CharField(max_length=255, default="Tap a store name to see its hours and a link to its page.")
     store_eyebrow = models.CharField(max_length=100, default="YOUR NEIGHBORHOOD SPIRITS STORE")
     store_hours_heading = models.CharField(max_length=100, default="Store hours")
     store_back_text = models.CharField(max_length=80, default="All locations")
